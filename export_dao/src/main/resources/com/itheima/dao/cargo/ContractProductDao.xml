@@ -275,5 +275,12 @@
         DELETE FROM co_contract_product WHERE contract_id = #{contractId}
     </delete>
 
+    <select id="findByShipTime" resultType="com.itheima.domain.vo.ContractProductVo" parameterType="string">
+        SELECT cc.custom_name AS customName, cc.contract_no AS contractNo,
+               cp.product_no AS productNo, cp.cnumber AS cnumber, cp.factory_name AS factoryName,
+               cc.delivery_period AS deliveryPeriod, cc.ship_time AS shipTime, cc.trade_terms AS tradeTerms
+        FROM co_contract cc INNER JOIN co_contract_product cp ON cc.id = cp.contract_id
+        WHERE DATE_FORMAT(cc.ship_time, '%Y-%m') = #{inputDate}
+    </select>
 
 </mapper>

@@ -7,6 +7,7 @@ import com.itheima.dao.cargo.ContractDao;
 import com.itheima.dao.cargo.ContractProductDao;
 import com.itheima.dao.cargo.ExtCproductDao;
 import com.itheima.domain.cargo.*;
+import com.itheima.domain.vo.ContractProductVo;
 import com.itheima.service.cargo.ContractProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -122,5 +123,10 @@ public class ContractProductServiceImpl implements ContractProductService {
         List<ContractProduct> list = contractProductDao.selectByExample(example);
         PageInfo pageInfo = new PageInfo(list);
         return pageInfo;
+    }
+
+    @Override
+    public List<ContractProductVo> findByShipTime(String inputDate) {
+        return contractProductDao.findByShipTime(inputDate);
     }
 }
