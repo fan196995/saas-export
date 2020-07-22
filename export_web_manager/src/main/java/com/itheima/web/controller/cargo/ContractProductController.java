@@ -17,7 +17,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -103,14 +102,14 @@ public class ContractProductController extends BaseController {
 
     @RequestMapping(value = "/import")
     public String importExcel(String contractId,MultipartFile file) throws IOException {
+
         Workbook workbook = new XSSFWorkbook(file.getInputStream());
         //页
         Sheet sheet = workbook.getSheetAt(0);
 
         Object[] strings  = new Object[10];
-
         //循环excel表数据
-        for (int i = 1; i <2; i++) {
+        for (int i = 1; i<=sheet.getLastRowNum(); i++) {
             Row row = sheet.getRow(i);
 
             for (int j = 1; j < 10; j++) {
