@@ -38,7 +38,8 @@
         </div>
         <!-- /.box-header -->
         <!-- form start -->
-        <form role="form" action="/cargo/contract/printExcel.do">
+<%--        <form role="form" action="/cargo/contract/printExcel.do">--%>
+        <form role="form" action="/cargo/contract/printExcelByTemplate.do">
             <div class="input-group input-group-sm" >
                 <div class="input-group-addon">
                     <i class="fa fa-calendar"></i>
