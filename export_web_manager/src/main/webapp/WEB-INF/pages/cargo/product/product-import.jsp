@@ -37,7 +37,9 @@
 
         <div class="callout callout-info">
             <h4>重要提示</h4>
-            推荐<a>下载模板文件</a>，填写后上传
+            <form role="form" action="/cargo/contractProduct/importExcelByTemplate.do" method="post" enctype="multipart/form-data">
+                推荐：<button type="download"  class="btn bg-default" style="color: #0c0c0c;background-color: #00a7d0">下载模板文件</button>，填写后上传
+            </form>
         </div>
 
         <!--订单信息-->

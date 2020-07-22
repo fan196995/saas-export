@@ -219,6 +219,7 @@ public class ContractController extends BaseController {
         sheet.setColumnWidth(7, 10*256);
         sheet.setColumnWidth(8, 10*256);
 
+        //合并单元格
         CellRangeAddress cellAddresses = new CellRangeAddress(0, 0, 1, 8);
         sheet.addMergedRegion(cellAddresses);
 

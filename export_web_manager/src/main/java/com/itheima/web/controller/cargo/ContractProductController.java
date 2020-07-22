@@ -3,18 +3,21 @@ package com.itheima.web.controller.cargo;
 import com.alibaba.dubbo.config.annotation.Reference;
 import com.github.pagehelper.PageInfo;
 import com.github.pagehelper.util.StringUtil;
+import com.itheima.common.utils.DownloadUtil;
 import com.itheima.common.utils.UploadUtil;
 import com.itheima.domain.cargo.*;
 import com.itheima.service.cargo.ContractProductService;
 import com.itheima.service.cargo.FactoryService;
 import com.itheima.web.controller.BaseController;
 import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -147,5 +150,36 @@ public class ContractProductController extends BaseController {
         }
 
         return object;
+    }
+
+    @RequestMapping(value = "/importExcelByTemplate")
+    public void importExcelByTemplate() throws IOException {
+        Workbook wb = new XSSFWorkbook();
+        Sheet sheet = wb.createSheet();
+
+        //12*256列宽
+        sheet.setColumnWidth(1, 12*256);
+        sheet.setColumnWidth(2, 12*256);
+        sheet.setColumnWidth(3, 12*256);
+        sheet.setColumnWidth(4, 20*256);
+        sheet.setColumnWidth(5, 12*256);
+        sheet.setColumnWidth(6, 12*256);
+        sheet.setColumnWidth(7, 12*256);
+        sheet.setColumnWidth(8, 12*256);
+        sheet.setColumnWidth(9, 12*256);
+
+        //小标题
+        Row row = sheet.createRow(0);
+        row.setHeightInPoints(26);
+        String[] strings = new String[]{"", "生产厂家", "货号", "数量", "包装单位(PCS/SETS)", "装率", "箱数", "单价", "货物描述","要求"};
+        for (int i = 1; i < strings.length; i++) {
+            Cell cell = row.createCell(i);
+            cell.setCellValue(strings[i]);
+        }
+
+        //下载excel表
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        wb.write(outputStream);
+        new DownloadUtil().download(outputStream,response,"上传货物模版.xlsx");
     }
 }
