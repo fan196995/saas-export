@@ -35,7 +35,6 @@
 	<!--mvc annotaton-->
 	<mvc:annotation-driven conversion-service="conversionService"></mvc:annotation-driven>
 
-
 	<!-- id 的值是固定的-->
 	<bean class="org.springframework.web.multipart.commons.CommonsMultipartResolver" id="multipartResolver">
 		<!-- id 的值是固定的-->
@@ -53,5 +52,9 @@
 
 	<dubbo:annotation package="com.itheima.web"></dubbo:annotation>
 
+	<!--  启动时是否检查服务提供者是否存在，
+	true: 则会检查【上线时】，没有则报错。false不检查
+	retries: 失败后的重试次数
+ 	-->
 	<dubbo:consumer check="false"></dubbo:consumer>
 </beans>
