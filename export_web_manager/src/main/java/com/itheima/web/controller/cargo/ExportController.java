@@ -3,15 +3,16 @@ package com.itheima.web.controller.cargo;
 import com.alibaba.dubbo.config.annotation.Reference;
 import com.github.pagehelper.PageInfo;
 import com.github.pagehelper.util.StringUtil;
-import com.itheima.domain.cargo.ContractExample;
-import com.itheima.domain.cargo.Export;
-import com.itheima.domain.cargo.ExportExample;
+import com.itheima.domain.cargo.*;
 import com.itheima.service.cargo.ContractService;
+import com.itheima.service.cargo.ExportProductService;
 import com.itheima.service.cargo.ExportService;
 import com.itheima.web.controller.BaseController;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import java.util.List;
 
 /**
  * @author fanbo
@@ -27,6 +28,9 @@ public class ExportController extends BaseController {
 
     @Reference
     private ExportService exportService;
+
+    @Reference
+    private ExportProductService exportProductService;
 
 
     @RequestMapping(value = "/contractList")
@@ -70,6 +74,22 @@ public class ExportController extends BaseController {
             exportService.update(export);
         }
         return "redirect:/cargo/export/list.do";
+    }
+
+
+    @RequestMapping(value = "/toUpdate")
+    public String toUpdate(String id){
+        Export export = exportService.findById(id);
+        request.setAttribute("export",export);
+
+        ExportProductExample exportProductExample = new ExportProductExample();
+        ExportProductExample.Criteria criteria = exportProductExample.createCriteria();
+        criteria.andExportIdEqualTo(id);
+
+        //查询报运单商品
+        List<ExportProduct> exportProductList = exportProductService.findAll(exportProductExample);
+        request.setAttribute("eps",exportProductList);
+        return "cargo/export/export-update";
     }
 
 }

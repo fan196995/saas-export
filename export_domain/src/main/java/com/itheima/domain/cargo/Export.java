@@ -28,7 +28,7 @@ public class Export extends BaseEntity implements Serializable{
 	private Integer proNum; //货物数量
 	private Integer extNum; //附件数量
 
-	private List<ExportProduct> exportProducts;
+	private List<ExportProduct> exportProducts;  //编辑报运单里的商品列表
 
 	public List<ExportProduct> getExportProducts() {
 		return exportProducts;

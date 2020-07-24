@@ -130,7 +130,13 @@ public class ExportServiceImpl implements ExportService {
 
     @Override
     public void update(Export export) {
-
+        exportDao.updateByPrimaryKeySelective(export);
+        if (export.getExportProducts()!=null){
+            List<ExportProduct> exportProducts = export.getExportProducts();
+            for (ExportProduct exportProduct : exportProducts) {
+                exportProductDao.updateByPrimaryKeySelective(exportProduct);
+            }
+        }
     }
 
     @Override
