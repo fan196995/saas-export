@@ -77,7 +77,7 @@ public class ExportServiceImpl implements ExportService {
 
             List<ContractProduct> contractProductList = contractProductDao.selectByExample(contractProductExample);
 
-            //key:货物id  value：报运商品id          货物id------商品id
+            //key:货物id  value：报运商品id         货物id------商品id
             Map<String, String> map = new HashMap<String, String>();
 
             //循环货物列表
@@ -141,7 +141,17 @@ public class ExportServiceImpl implements ExportService {
 
     @Override
     public void delete(String id) {
-
+        Export export = exportDao.selectByPrimaryKey(id);
+        String[] contractIds = export.getContractIds().split(",");
+        //循环查询合同，合同号
+        for (String contractId : contractIds) {
+            Contract contract = contractDao.selectByPrimaryKey(contractId);
+            //0-草稿 1-已上报 2-装箱 3-委托 4-发票 5-财务
+            contract.setState(0);
+            //更新
+            contractDao.updateByPrimaryKeySelective(contract);
+        }
+        exportDao.deleteByPrimaryKey(id);
     }
 
     @Override

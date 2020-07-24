@@ -92,4 +92,26 @@ public class ExportController extends BaseController {
         return "cargo/export/export-update";
     }
 
+    @RequestMapping(value = "/submit")
+    public String submit(String id){
+        Export export = exportService.findById(id);
+        export.setState(1);
+        exportService.update(export);
+        return "redirect:/cargo/export/list.do";
+    }
+
+    @RequestMapping(value = "/cancel")
+    public String cancel(String id){
+        Export export = exportService.findById(id);
+        export.setState(0);
+        exportService.update(export);
+        return "redirect:/cargo/export/list.do";
+    }
+
+    @RequestMapping(value = "/delete")
+    public String delete(String id){
+        exportService.delete(id);
+        return "redirect:/cargo/export/list.do";
+    }
+
 }
