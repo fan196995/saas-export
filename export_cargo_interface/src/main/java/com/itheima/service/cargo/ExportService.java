@@ -4,6 +4,7 @@ package com.itheima.service.cargo;
 import com.github.pagehelper.PageInfo;
 import com.itheima.domain.cargo.Export;
 import com.itheima.domain.cargo.ExportExample;
+import com.itheima.domain.vo.ExportResult;
 
 
 public interface ExportService {
@@ -17,4 +18,6 @@ public interface ExportService {
     void delete(String id);
 
 	PageInfo findAll(ExportExample example, int page, int size);
+
+    void updateE(ExportResult exportResult);
 }

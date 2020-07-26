@@ -17,6 +17,8 @@
         <module>export_web_portal</module>
         <module>export_company_interface</module>
         <module>export_company_service</module>
+        <module>export_stat_interface</module>
+        <module>export_stat_service</module>
     </modules>
 
     <!-- 集中定义依赖版本号 -->
@@ -27,7 +29,7 @@
         <servlet-api.version>2.5</servlet-api.version>
         <mybatis.version>3.2.8</mybatis.version>
         <mybatis.spring.version>1.2.2</mybatis.spring.version>
-        <mysql.version>5.1.32</mysql.version>
+        <mysql.version>5.1.47</mysql.version>
         <druid.version>1.0.9</druid.version>
         <commons-fileupload.version>1.3.1</commons-fileupload.version>
         <activemq.version>5.11.2</activemq.version>
@@ -75,7 +77,6 @@
             <artifactId>spring-test</artifactId>
             <version>${spring.version}</version>
         </dependency>
-
 
         <dependency>
             <groupId>junit</groupId>

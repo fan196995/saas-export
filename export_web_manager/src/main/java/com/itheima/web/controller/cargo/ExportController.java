@@ -4,14 +4,21 @@ import com.alibaba.dubbo.config.annotation.Reference;
 import com.github.pagehelper.PageInfo;
 import com.github.pagehelper.util.StringUtil;
 import com.itheima.domain.cargo.*;
+import com.itheima.domain.vo.ExportProductVo;
+import com.itheima.domain.vo.ExportResult;
+import com.itheima.domain.vo.ExportVo;
 import com.itheima.service.cargo.ContractService;
 import com.itheima.service.cargo.ExportProductService;
 import com.itheima.service.cargo.ExportService;
 import com.itheima.web.controller.BaseController;
+import com.sun.xml.internal.bind.v2.model.core.ID;
+import org.apache.cxf.jaxrs.client.WebClient;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -111,6 +118,52 @@ public class ExportController extends BaseController {
     @RequestMapping(value = "/delete")
     public String delete(String id){
         exportService.delete(id);
+        return "redirect:/cargo/export/list.do";
+    }
+
+
+    //海关
+    @RequestMapping(value = "/exportE")
+    public String exportE(String id){
+        Export export = exportService.findById(id);
+        //海关数据实体
+        ExportVo exportVo = new ExportVo();
+        BeanUtils.copyProperties(export,exportVo);
+        exportVo.setExportId(id);
+
+        //查询报运商品
+        ExportProductExample exportProductExample = new ExportProductExample();
+        ExportProductExample.Criteria criteria = exportProductExample.createCriteria();
+        criteria.andExportIdEqualTo(id);
+        List<ExportProduct> exportProductList = exportProductService.findAll(exportProductExample);
+
+        List<ExportProductVo> exportVos = new ArrayList<ExportProductVo>();
+
+        //构造给海关数据
+        for (ExportProduct exportProduct : exportProductList) {
+            ExportProductVo exportProductVo = new ExportProductVo();
+            BeanUtils.copyProperties(exportProduct,exportProductVo);
+            exportProductVo.setExportId(id);
+            exportProductVo.setExportProductId(exportProduct.getId());
+            exportVos.add(exportProductVo);
+        }
+
+        //合并海关商品和主数据
+        exportVo.setProducts(exportVos);
+
+        //调海关接口 jax-rs 数据传给海关
+        WebClient wc  = WebClient.create("http://localhost:8099/ws/export/user");
+        wc.post(exportVo);
+
+        //id传给海关
+        wc = WebClient.create("http://localhost:8099/ws/export/user/"+id);
+        ExportResult exportResult =  wc.get(ExportResult.class);
+
+        System.out.println("========================调用海关接口："+exportResult.toString());
+
+        //通过海关返回更新税金
+        exportService.updateE(exportResult);
+
         return "redirect:/cargo/export/list.do";
     }
 

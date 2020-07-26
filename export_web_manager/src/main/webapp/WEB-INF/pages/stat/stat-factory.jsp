@@ -17,7 +17,7 @@
     </section>
     <section class="content">
         <div class="box box-primary">
-            <div id="main" style="width: 600px;height:400px;"></div>
+            <div id="main" style="width: 100%;height:400px;"></div>
         </div>
     </section>
 </div>
@@ -25,21 +25,31 @@
 <script src="../plugins/jQuery/jquery-2.2.3.min.js"></script>
 <script src="../../plugins/echarts/echarts.min.js"></script>
 <script type="text/javascript">
-    // 基于准备好的dom，初始化echarts实例
-    var myChart = echarts.init(document.getElementById('main'));
 
-    // 指定图表的配置项和数据
-    $.get('/stat/factoryCharts.do').done(function (data) {
-        // 使用刚指定的配置项和数据显示图表。
-        myChart.setOption({
+    $.get("/stat/getFactoryData.do", function (factoryData) {
+
+        var titles = [];
+        for (var i=0; i<factoryData.length; i++){
+            titles[i] = factoryData[i].name;
+        }
+
+        // 基于准备好的dom，初始化echarts实例
+        var myChart = echarts.init(document.getElementById('main'));
+
+        var option = {
             title : {
-                text: '厂家销售统计',
-                subtext: '',
+                text: '某站点用户访问来源',
+                subtext: '纯属虚构',
                 x:'center'
             },
             tooltip : {
                 trigger: 'item',
                 formatter: "{a} <br/>{b} : {c} ({d}%)"
+            },
+            legend: {
+                orient: 'vertical',
+                left: 'left',
+                data: titles
             },
             series : [
                 {
@@ -47,7 +57,7 @@
                     type: 'pie',
                     radius : '55%',
                     center: ['50%', '60%'],
-                    data:data,
+                    data: factoryData,
                     itemStyle: {
                         emphasis: {
                             shadowBlur: 10,
@@ -57,7 +67,12 @@
                     }
                 }
             ]
-        })
-    });
+        };
+
+
+        // 使用刚指定的配置项和数据显示图表。
+        myChart.setOption(option);
+    })
+
 </script>
 </html>

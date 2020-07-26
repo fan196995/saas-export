@@ -20,12 +20,12 @@
     <section class="content-header">
         <h1>
             统计分析
-            <small>厂家销量统计</small>
+            <small>商品销量排行统计</small>
         </h1>
     </section>
     <section class="content">
         <div class="box box-primary">
-            <div id="main" style="width: 600px;height:400px;"></div>
+            <div id="main" style="width: 100%; height:400px;"></div>
         </div>
     </section>
 </div>
@@ -34,34 +34,39 @@
 <script src="../plugins/jQuery/jquery-2.2.3.min.js"></script>
 <script src="../../plugins/echarts/echarts.min.js"></script>
 <script type="text/javascript">
-    // 基于准备好的dom，初始化echarts实例
-    var myChart = echarts.init(document.getElementById('main'));
 
-    $.get('/stat/sellCharts.do').done(function (data) {
+    $.get("/stat/getSellData.do", function (SellData) {
+
+        var titles = [];
+        var values = [];
+        for (var i=0; i<SellData.length; i++){
+            titles[i] = SellData[i].name;
+            values[i] = SellData[i].value;
+        }
+
+        // 基于准备好的dom，初始化echarts实例
+        var myChart = echarts.init(document.getElementById('main'));
+
+        var option = {
+            xAxis: {
+                type: 'category',
+                data: titles,
+                axisLabel: {
+                    rotate:70
+                }
+            },
+            yAxis: {
+                type: 'value'
+            },
+            series: [{
+                data: values,
+                type: 'bar'
+            }]
+        };
+
         // 使用刚指定的配置项和数据显示图表。
-        myChart.setOption(
-            option = {
-                title: {
-                    left: 'center',
-                    text: '产品销量排行',
-                },
-                xAxis: {
-                    type: 'category',
-                    data: data.title,
-                    axisLabel: {
-                        rotate:70
-                    }
-                },
-                yAxis: {
-                    type: 'value'
-                },
-                series: [{
-                    data: data.value,
-                    type: 'bar'
-                }]
-            }
-        )
-    });
+        myChart.setOption(option);
+    })
 </script>
 
 </html>

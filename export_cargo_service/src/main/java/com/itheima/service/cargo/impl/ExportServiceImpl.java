@@ -5,6 +5,8 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.itheima.dao.cargo.*;
 import com.itheima.domain.cargo.*;
+import com.itheima.domain.vo.ExportProductResult;
+import com.itheima.domain.vo.ExportResult;
 import com.itheima.service.cargo.ExportService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -160,5 +162,21 @@ public class ExportServiceImpl implements ExportService {
         List<Export> list = exportDao.selectByExample(example);
         PageInfo pageInfo = new PageInfo(list);
         return pageInfo;
+    }
+
+    @Override
+    public void updateE(ExportResult exportResult) {
+        Export export = exportDao.selectByPrimaryKey(exportResult.getExportId());
+        export.setState(exportResult.getState());
+        export.setRemark(exportResult.getRemark());
+        exportDao.updateByPrimaryKeySelective(export);
+
+        Set<ExportProductResult> products = exportResult.getProducts();
+        for (ExportProductResult product : products) {
+            ExportProduct exportProduct = new ExportProduct();
+            exportProduct.setId(product.getExportProductId());
+            exportProduct.setTax(product.getTax());
+            exportProductDao.updateByPrimaryKeySelective(exportProduct);
+        }
     }
 }

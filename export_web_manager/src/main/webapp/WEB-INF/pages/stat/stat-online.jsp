@@ -26,7 +26,7 @@
     </section>
     <section class="content">
         <div class="box box-primary">
-            <div id="main" style="width: 600px;height:400px;"></div>
+            <div id="main" style="width: 100%;height:400px;"></div>
         </div>
     </section>
 </div>
@@ -35,31 +35,38 @@
 <script src="../plugins/jQuery/jquery-2.2.3.min.js"></script>
 <script src="../../plugins/echarts/echarts.min.js"></script>
 <script type="text/javascript">
-    // 基于准备好的dom，初始化echarts实例
-    var myChart = echarts.init(document.getElementById('main'));
-    // 指定图表的配置项和数据
-    $.get('/stat/onlineCharts.do').done(function (data) {
+
+    $.get("/stat/getOnlineData.do", function (OnlineData) {
+
+        var titles = [];
+        var values = [];
+        for (var i=0; i<OnlineData.length; i++){
+            titles[i] = OnlineData[i].name;
+            values[i] = OnlineData[i].value;
+        }
+
+        // 基于准备好的dom，初始化echarts实例
+        var myChart = echarts.init(document.getElementById('main'));
+
+        var option = {
+            xAxis: {
+                type: 'category',
+                data: titles
+            },
+            yAxis: {
+                type: 'value'
+            },
+            series: [{
+                data: values,
+                type: 'line',
+                smooth: true
+            }]
+        };
+
         // 使用刚指定的配置项和数据显示图表。
-        myChart.setOption(
-            {
-                title: {
-                    left: 'center',
-                    text: '在线人数折线图',
-                },
-                xAxis: {
-                    type: 'category',
-                    data: data.title
-                },
-                yAxis: {
-                    type: 'value'
-                },
-                series: [{
-                    data: data.value,
-                    type: 'line'
-                }]
-            }
-        )
-    });
+        myChart.setOption(option);
+    })
+
 </script>
 
 </html>
