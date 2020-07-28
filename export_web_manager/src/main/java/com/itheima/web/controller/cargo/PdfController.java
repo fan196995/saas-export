@@ -6,6 +6,7 @@ import com.itheima.common.utils.BeanMapUtils;
 import com.itheima.domain.cargo.Export;
 import com.itheima.domain.cargo.ExportProduct;
 import com.itheima.domain.cargo.ExportProductExample;
+import com.itheima.service.cargo.ContractProductService;
 import com.itheima.service.cargo.ExportProductService;
 import com.itheima.service.cargo.ExportService;
 import com.itheima.web.controller.BaseController;
@@ -28,6 +29,8 @@ public class PdfController extends BaseController {
     @Reference
     private ExportProductService exportProductService;
 
+    @Reference
+    private ContractProductService contractProductService;
 
     @RequestMapping(value = "/exportPdf")
     public void exportPdf(String id) throws Exception {
@@ -35,6 +38,8 @@ public class PdfController extends BaseController {
         Export export = exportService.findById(id);
 
         export.setCustomerContract(export.getCustomerContract());
+
+        //TODO  报运单中厂家的信息
 
         //将实体类转化为map
 /*        Map map = new HashMap();
@@ -48,7 +53,6 @@ public class PdfController extends BaseController {
         criteria.andExportIdEqualTo(id);
 
         List<ExportProduct> list = exportProductService.findAll(exportProductExample);
-
 
         // [{productNo: 123, packingUnit: 1}, {productNo: 1234, packingUnit: 12}]
 
